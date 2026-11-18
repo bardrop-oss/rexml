@@ -411,7 +411,10 @@ module REXML
         while path[0] == ?[
           path, expr = get_group(path)
           predicates << expr[1..-2] if expr
-          path = path.lstrip
+          # Keep the leading space for a following "and", "or", "div" or "mod".
+          next_path = path.lstrip
+          break unless next_path[0] == ?[
+          path = next_path
         end
         predicates.each{ |pred|
           preds = []

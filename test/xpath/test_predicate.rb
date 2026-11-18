@@ -171,5 +171,17 @@ XML
                      REXML::Comment.new("COMMENT")],
                     m )
     end
+
+    def test_word_operator_after_predicate
+      doc = REXML::Document.new("<r><v>6</v><v>2</v></r>")
+      assert_equal([[true], [true], [2.0], [2.0], [2.0]],
+                   [
+                     REXML::XPath.match(doc, "//v[1] and true()"),
+                     REXML::XPath.match(doc, "//v[2] or false()"),
+                     REXML::XPath.match(doc, "//v[1] div 3"),
+                     REXML::XPath.match(doc, "/r/v[1] mod 4"),
+                     REXML::XPath.match(doc, "//v[1][1] div 3"),
+                   ])
+    end
   end
 end
