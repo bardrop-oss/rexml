@@ -310,7 +310,12 @@ module REXML
           when :div
             return left / right
           when :mod
-            return left % right
+            # The mod operator returns the remainder from a truncating
+            # division, so the result has the sign of the left side.
+            if right.zero? or not left.finite? or right.to_f.nan?
+              return Float::NAN
+            end
+            return left.remainder(right)
           when :mult
             return left * right
           when :plus

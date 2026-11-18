@@ -223,6 +223,25 @@ module REXMLTests
                    ])
     end
 
+    def test_mod_truncating
+      doc = REXML::Document.new("<a/>")
+      assert_equal([
+                     "1", "1", "-1", "-1", "-0.5", "1.5",
+                     "NaN", "NaN", "5",
+                   ],
+                   [
+                     REXML::XPath.first(doc, "string(5 mod 2)"),
+                     REXML::XPath.first(doc, "string(5 mod -2)"),
+                     REXML::XPath.first(doc, "string(-5 mod 2)"),
+                     REXML::XPath.first(doc, "string(-5 mod -2)"),
+                     REXML::XPath.first(doc, "string(-0.5 mod 3)"),
+                     REXML::XPath.first(doc, "string(5.5 mod 2)"),
+                     REXML::XPath.first(doc, "string(1 mod 0)"),
+                     REXML::XPath.first(doc, "string((1 div 0) mod 2)"),
+                     REXML::XPath.first(doc, "string(5 mod (1 div 0))"),
+                   ])
+    end
+
     def test_string_infinity
       doc = REXML::Document.new("<a/>")
       assert_equal(["Infinity", "-Infinity"],
